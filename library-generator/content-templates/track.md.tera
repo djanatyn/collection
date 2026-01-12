@@ -1,0 +1,36 @@
++++
+title = "{{ title }}"
+template = "{{ template }}"
+[extra]
+track = "{{ track | escape_toml }}"
+artist = "{{ artist | escape_toml }}"
+{% if album -%}
+album = "{{ album | escape_toml }}"
+{% endif -%}
+{% if year -%}
+year = "{{ year }}"
+{% endif -%}
+format = "{{ format }}"
+bitrate = "{{ bitrate }}"
+length = "{{ length }}"
+{% if genre -%}
+genre = "{{ genre | escape_toml }}"
+{% endif -%}
+{% if comments -%}
+comments = "{{ comments | escape_toml }}"
+{% endif -%}
+search_content = {{ search_content | json_encode }}
+url = "{{ url }}"
++++
+
+# {{ title }}
+
+**Artist:** {{ artist }}
+{% if album -%}
+**Album:** {{ album }}
+{% endif -%}
+{% if year -%}
+**Year:** {{ year }}
+{% endif -%}
+**Length:** {{ length }}
+**Format:** {{ format }} {{ bitrate }}

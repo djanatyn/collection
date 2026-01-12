@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Home</a>
+</div>
+
+{% if page.content %}
+{{ page.content | safe }}
+{% endif %}
+
+{% if page.assets %}
+<div class="stats">
+    <h3>Recent Updates</h3>
+    <ul class="track-list">
+        {% for asset in page.assets | slice(end=10) %}
+        <li>
+            <a href="{{ asset.permalink }}">{{ asset.title }}</a>
+            {% if asset.year %}({{ asset.year }}){% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

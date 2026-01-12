@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} - {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Home</a> / <a href="/artists/">Artists</a> / {{ page.title }}
+</div>
+
+{{ page.content | safe }}
+
+{% if page.extra.albums %}
+<div class="grid">
+    {% for album in page.extra.albums %}
+    <div class="card">
+        <h3><a href="/albums/{{ album.title | slugify }}/">{{ album.title }}</a></h3>
+        <p>{{ album.year }} • {{ album.tracks }} tracks</p>
+        {% if album.genre %}
+        <p><strong>Genre:</strong> {{ album.genre }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if page.extra.tracks %}
+<h3>Standalone Tracks</h3>
+<ul class="track-list">
+    {% for track in page.extra.tracks %}
+    <li>
+        <a href="/tracks/{{ track.title | slugify }}/">{{ track.title }}</a>
+        {{ track.length }}
+        {% if track.year %}({{ track.year }}){% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

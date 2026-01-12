@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} - {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Home</a> / <a href="/albums/">Albums</a> / {{ page.title }}
+</div>
+
+{{ page.content | safe }}
+
+{% if page.extra.tracks %}
+<h3>Tracklist</h3>
+<ul class="track-list">
+        {% for track in page.extra.tracks %}
+    <li>
+        <strong>{{ loop.index0 }}.</strong> 
+        <a href="/tracks/{{ track.title | slugify }}/">{{ track.title }}</a>
+        {{ track.length }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="stats">
+    <p><strong>Artist:</strong> {{ page.extra.artist }}</p>
+    {% if page.extra.year %}<p><strong>Year:</strong> {{ page.extra.year }}</p>{% endif %}
+    <p><strong>Total Tracks:</strong> {{ page.extra.tracks | length }}</p>
+    {% if page.extra.genre %}<p><strong>Genre:</strong> {{ page.extra.genre }}</p>{% endif %}
+</div>
+{% endblock %}

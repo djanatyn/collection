@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ config.title }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ get_url(path="css/style.css", cachebust=true) }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body data-theme="terminus" class="layout-center">
+    <header>
+        <h1><a href="/" style="text-decoration: none; color: inherit;">{{ config.title }}</a></h1>
+        <p>{{ config.description }}</p>
+    </header>
+    
+    <nav>
+        <a href="/">Home</a>
+        <a href="/artists/">Artists</a>
+        <a href="/albums/">Albums</a>
+        <a href="/games/">Games</a>
+        <input type="search" class="search-box" placeholder="Search..." id="search-input" autocomplete="off">
+    </nav>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #eee; text-align: center; color: #666;">
+        <p>Generated with library-generator from beets export</p>
+    </footer>
+    
+    <script src="{{ get_url(path="/search_index.en.js") }}"></script>
+    <script src="{{ get_url(path="/elasticlunr.min.js") }}"></script>
+    <script>
+        // Search functionality
+        let searchIndex;
+        let searchResults = [];
+        
+        // Initialize search index function
+        function initializeSearch() {
+            if (typeof window.searchIndex !== 'undefined') {
+                searchIndex = elasticlunr.Index.load(window.searchIndex);
+                console.log('Search index loaded successfully');
+                return true;
+            } else {
+                console.log('Search index still not available');
+                return false;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const searchResultsDiv = document.createElement('div');
+            searchResultsDiv.id = 'search-results';
+            searchResultsDiv.style.cssText = `
+                position: absolute;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 3px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                max-height: 400px;
+                overflow-y: auto;
+                z-index: 1000;
+                display: none;
+                min-width: 300px;
+                margin-top: 5px;
+                right: 0;
+                left: auto;
+            `;
+            
+            searchInput.parentNode.style.position = 'relative';
+            searchInput.parentNode.appendChild(searchResultsDiv);
+            
+            // Initialize search index immediately
+            initializeSearch();
+            
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.trim();
+                
+                if (query.length < 2) {
+                    searchResultsDiv.style.display = 'none';
+                    return;
+                }
+                
+                performSearch(query);
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if (searchInput.value.trim().length >= 2) {
+                    const query = searchInput.value.trim();
+                    performSearch(query);
+                }
+            });
+            
+            // Hide results when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResultsDiv.contains(e.target)) {
+                    searchResultsDiv.style.display = 'none';
+                }
+            });
+            
+            function performSearch(query) {
+                console.log('Performing search for:', query);
+                console.log('SearchIndex available:', !!searchIndex);
+                console.log('Window searchIndex available:', !!window.searchIndex);
+                
+                if (!searchIndex) {
+                    console.log('No search index available - trying to initialize');
+                    initializeSearch();
+                    if (!searchIndex) return;
+                }
+                
+                const results = searchIndex.search(query, {
+                    fields: {
+                        title: {boost: 2, expand: true},
+                        body: {boost: 1, expand: true}
+                    },
+                    bool: "OR"
+                });
+                
+                console.log('Search results found:', results.length);
+                displayResults(results);
+            }
+            
+            function displayResults(results) {
+                searchResultsDiv.innerHTML = '';
+
+                if (results.length === 0) {
+                    searchResultsDiv.innerHTML = '<div style="padding: 1rem; color: #666;">No results found</div>';
+                } else {
+                    results.slice(0, 10).forEach(function(result) {
+                        // Get the actual document from the document store
+                        const item = searchIndex.documentStore.getDoc(result.ref);
+                        if (!item) return; // Skip if document not found
+
+                        const resultDiv = document.createElement('div');
+                        resultDiv.style.cssText = `
+                            padding: 0.75rem 1rem;
+                            border-bottom: 1px solid #eee;
+                            cursor: pointer;
+                        `;
+
+                        // Extract title and URL from the result
+                        const title = item.title || 'Untitled';
+                        const url = result.ref; // The ref is the URL path
+
+                        // Determine type from URL path
+                        let type = '';
+                        let typeColor = '#666';
+                        if (url.includes('/games/')) {
+                            type = 'Game';
+                            typeColor = '#00aa00';
+                        } else if (url.includes('/artists/')) {
+                            type = 'Artist';
+                            typeColor = '#aa00aa';
+                        } else if (url.includes('/albums/')) {
+                            type = 'Album';
+                            typeColor = '#0066cc';
+                        } else if (url.includes('/tracks/')) {
+                            type = 'Track';
+                            typeColor = '#cc6600';
+                        }
+
+                        resultDiv.innerHTML = `
+                            <div style="font-weight: bold; color: #0066cc;">${title}</div>
+                            ${type ? `<div style="font-size: 0.85em; color: ${typeColor}; margin-top: 0.25rem;">${type}</div>` : ''}
+                        `;
+                        resultDiv.addEventListener('click', function() {
+                            window.location.href = url;
+                        });
+                        searchResultsDiv.appendChild(resultDiv);
+                    });
+                }
+                
+                searchResultsDiv.style.display = 'block';
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

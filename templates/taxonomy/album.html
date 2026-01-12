@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Albums - {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Home</a> / Albums
+</div>
+
+<h1>Albums</h1>
+
+<div class="grid">
+    {% for album in term.pages %}
+    <div class="card">
+        <h3><a href="{{ album.permalink }}">{{ album.title }}</a></h3>
+        <p><strong>Artist:</strong> <a href="/artists/{{ album.extra.artist | slugify }}/">{{ album.extra.artist }}</a></p>
+        {% if album.extra.year %}<p><strong>Year:</strong> {{ album.extra.year }}</p>{% endif %}
+        {% if album.extra.tracks %}<p><strong>Tracks:</strong> {{ album.extra.tracks | length }}</p>{% endif %}
+        {% if album.extra.genre %}<p><strong>Genre:</strong> {{ album.extra.genre }}</p>{% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

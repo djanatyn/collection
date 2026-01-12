@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} - {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Home</a> / <a href="/games/">Games</a> / {{ page.title }}
+</div>
+
+{{ page.content | safe }}
+
+<div class="stats">
+    <p><strong>Playtime:</strong> {{ page.extra.playtime_hours }} hours</p>
+    <p><strong>Last Played:</strong> {{ page.extra.last_played }}</p>
+    <p><strong>App ID:</strong> {{ page.extra.appid }}</p>
+</div>
+
+<div class="card">
+    <h3>Links</h3>
+    <p><a href="https://store.steampowered.com/app/{{ page.extra.appid }}" target="_blank">View on Steam Store</a></p>
+</div>
+{% endblock %}

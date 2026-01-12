@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} - {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Home</a> / {{ section.title }}
+</div>
+
+<h1>{{ section.title }}</h1>
+
+{% if section.content %}
+    {{ section.content | safe }}
+{% else %}
+    <div class="stats">
+        <p>Browse all {{ section.title | lower }} in the library.</p>
+    </div>
+{% endif %}
+
+<div class="grid">
+    {% for page in section.pages %}
+    <div class="card">
+        <h3><a href="{{ page.permalink }}">{{ page.title }}</a></h3>
+        {% if page.content %}
+            {{ page.content | safe }}
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

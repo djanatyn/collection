@@ -1,0 +1,25 @@
++++
+title = "{{ title }}"
+template = "{{ template }}"
+[extra]
+album = "{{ album | escape_toml }}"
+artist = "{{ artist | escape_toml }}"
+{% if year -%}
+year = "{{ year }}"
+{% endif -%}
+genre = "{{ genre | escape_toml }}"
+tracktotal = {{ tracktotal }}
+tracks = [
+{% for track in tracks -%}
+  { title = "{{ track.title | escape_toml }}", length = "{{ track.length }}" },
+{% endfor -%}
+]
++++
+
+# {{ title }}
+
+**Artist:** {{ artist }}
+{% if year -%}
+**Year:** {{ year }}
+{% endif -%}
+**Tracks:** {{ tracks | length }}

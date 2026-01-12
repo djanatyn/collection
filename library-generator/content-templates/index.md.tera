@@ -1,0 +1,18 @@
++++
+title = "{{ title }}"
+sort_by = "{{ sort_by }}"
+template = "{{ template }}"
++++
+
+# Music Library
+
+This library contains **{{ artist_count }}** artists.
+
+- **{{ album_count }}** albums
+- **{{ track_count }}** tracks
+
+## Browse by Artist
+
+{% for artist in artists -%}
+- [{{ artist.name }}]({{ artist.slug }}/)
+{% endfor -%}

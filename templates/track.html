@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} - {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Home</a> / 
+    {% if page.extra.album %}
+        <a href="/albums/">Albums</a> / <a href="/albums/{{ page.extra.album | slugify }}/">{{ page.extra.album }}</a>
+    {% endif %}
+    / {{ page.title }}
+</div>
+
+{{ page.content | safe }}
+
+<div class="stats">
+    <p><strong>Artist:</strong> <a href="/artists/{{ page.extra.artist | slugify }}/">{{ page.extra.artist }}</a></p>
+    {% if page.extra.album %}<p><strong>Album:</strong> <a href="/albums/{{ page.extra.album | slugify }}/">{{ page.extra.album }}</a></p>{% endif %}
+    {% if page.extra.year %}<p><strong>Year:</strong> {{ page.extra.year }}</p>{% endif %}
+    <p><strong>Length:</strong> {{ page.extra.length }}</p>
+    <p><strong>Format:</strong> {{ page.extra.format }} {{ page.extra.bitrate }}</p>
+    {% if page.extra.genre %}<p><strong>Genre:</strong> {{ page.extra.genre }}</p>{% endif %}
+</div>
+
+{% if page.extra.comments %}
+<div class="card">
+    <h3>Comments</h3>
+    <p>{{ page.extra.comments }}</p>
+</div>
+{% endif %}
+{% endblock %}

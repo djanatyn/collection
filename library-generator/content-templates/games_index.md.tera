@@ -1,0 +1,17 @@
++++
+title = "{{ title }}"
+sort_by = "{{ sort_by }}"
+template = "{{ template }}"
++++
+
+# Games
+
+This library contains **{{ game_count }}** games.
+
+- **Total Playtime:** {{ total_hours }} hours
+
+## All Games (by playtime)
+
+{% for game in games -%}
+- [{{ game.name }}]({{ game.slug }}/) - {{ game.playtime_hours }}
+{% endfor -%}

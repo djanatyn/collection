@@ -1,0 +1,19 @@
++++
+title = "{{ title }}"
+template = "game.html"
+[extra]
+game = "{{ game | escape_toml }}"
+appid = {{ appid }}
+playtime_hours = "{{ playtime_hours }}"
+last_played = "{{ last_played }}"
+search_content = {{ search_content | json_encode }}
+url = "{{ url }}"
++++
+
+# {{ title }}
+
+**Playtime:** {{ playtime_hours }} hours
+**Last Played:** {{ last_played }}
+**App ID:** {{ appid }}
+
+[View on Steam](https://store.steampowered.com/app/{{ appid }})

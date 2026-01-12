@@ -1,0 +1,36 @@
++++
+title = "{{ title }}"
+template = "{{ template }}"
+[extra]
+artist = "{{ artist | escape_toml }}"
+albums = [
+{% for album in albums -%}
+  { title = "{{ album.title | escape_toml }}", year = "{{ album.year }}", tracks = {{ album.tracks }} },
+{% endfor -%}
+]
+{% if tracks -%}
+tracks = [
+{% for track in tracks -%}
+  { title = "{{ track.title | escape_toml }}", length = "{{ track.length }}", year = "{{ track.year }}" },
+{% endfor -%}
+]
+{% endif -%}
++++
+
+# {{ artist }}
+
+{% if albums -%}
+## Albums
+
+{% for album in albums -%}
+- [{{ album.title }}]({{ album.title | slugify }}) - {{ album.tracks }} tracks
+{% endfor -%}
+
+{% endif -%}
+{% if tracks -%}
+## Standalone Tracks
+
+{% for track in tracks -%}
+- [{{ track.title }}]({{ track.title | slugify }}) - {{ track.length }}
+{% endfor -%}
+{% endif -%}

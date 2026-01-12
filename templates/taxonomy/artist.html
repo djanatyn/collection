@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Artists - {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Home</a> / Artists
+</div>
+
+<h1>Artists</h1>
+
+<div class="grid">
+    {% for artist in term.pages %}
+    <div class="card">
+        <h3><a href="{{ artist.permalink }}">{{ artist.title }}</a></h3>
+        {% if artist.extra.albums %}
+        <p>{{ artist.extra.albums | length }} albums</p>
+        {% endif %}
+        {% if artist.extra.tracks %}
+        <p>{{ artist.extra.tracks | length }} standalone tracks</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
