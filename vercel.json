@@ -1,4 +1,10 @@
 {
-  "installCommand": "git submodule update --init --recursive && find . && zola --version",
-  "buildCommand": "zola build"
+  "installCommand": "git submodule update --init --recursive",
+  "buildCommand": "zola build",
+  "framework": "zola",
+  "build": {
+    "env": {
+      "ZOLA_VERSION": "0.21.0"
+    }
+  }
 }
