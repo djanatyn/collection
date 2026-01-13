@@ -1,8 +1,5 @@
 # Rust build artifacts
 **/target/
 
-# Generated content
-/content/
-
 # Build inputs
 /inputs/
