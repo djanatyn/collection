@@ -1,4 +1,4 @@
 {
-  "installCommand": "git submodule update --init --recursive && npm install",
+  "installCommand": "git submodule update --init --recursive",
   "buildCommand": "zola build"
 }
